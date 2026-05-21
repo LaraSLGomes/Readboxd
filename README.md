@@ -1,4 +1,4 @@
-# 📚 ReadBoxd
+# ReadBoxd
 
 **ReadBoxd** é uma plataforma de gerenciamento de leitura inspirada no funcionamento do Letterboxd. Este projeto foi desenvolvido como Projeto Final (AV3) da disciplina de **Estrutura de Dados** do curso de Ciência da Computação da Universidade de Fortaleza (UNIFOR).
 
