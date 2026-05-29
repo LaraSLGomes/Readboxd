@@ -5,7 +5,7 @@ public class Livro {
     private String autor;
     private int ano;
     private String genero;
-    private double rating; 
+    private double rating;
 
     public Livro(String titulo, String autor, int ano, String genero) {
         this.titulo = titulo;
@@ -15,6 +15,7 @@ public class Livro {
         this.rating = 0.0; 
     }
 
+    
     public String getTitulo() {
         return this.titulo;
     }
@@ -23,15 +24,23 @@ public class Livro {
         return this.autor;
     }
 
+    public int getAno() {
+        return this.ano;
+    }
+
+    public String getGenero() {
+        return this.genero;
+    }
+
     public double getRating() {
         return this.rating;
     }
 
     public void setRating(double nota) {
-        if (nota >= 0.0 && nota <= 5.0) {
+        if (nota >= 1.0 && nota <= 5.0) {
             this.rating = nota;
         } else {
-            System.out.println("A nota deve ser entre 0.0 e 5.0!");
+            System.out.println("Erro: A nota deve ser entre 1.0 e 5.0.");
         }
     }
 
