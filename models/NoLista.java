@@ -4,8 +4,8 @@ public class NoLista {
     public Livro livro;      
     private NoLista proximo;  
 
-    public NoLista(Livro libro) {
-        this.livro = libro;
+    public NoLista(Livro livro) {
+        this.livro = livro;
         this.proximo = null;
     }
 
