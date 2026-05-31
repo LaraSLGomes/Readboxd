@@ -1,15 +1,14 @@
 package app;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
 import models.Livro;
 import structures.BibliotecaLista;
 import structures.CatalogoBST;
 import structures.LeituraFila;
 import structures.PilhaHistorico;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Scanner;
 
 public class ReadBoxdApp {
     private CatalogoBST catalogo;
@@ -110,7 +109,7 @@ public class ReadBoxdApp {
                 
                 case "6":
                     historico.empilhar("Histórico de Navegação");
-                    historico.imprimirHistorico();
+                    historico.exibirHistorico();
                     historico.desempilhar();
                     break;
                 
