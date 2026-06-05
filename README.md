@@ -41,7 +41,7 @@ Para garantir a eficiência e demonstrar a aplicação dos conceitos estudados, 
 
 O código-fonte está estruturado no padrão de pacotes (packages) do Java para manter a separação de responsabilidades (MVC / Camadas):
 
-    src/
+    ReadBoxd/
     ├── app/                  # Lógica de controle, menus e inicialização
     │   ├── Main.java
     │   └── ReadBoxdApp.java

@@ -98,7 +98,6 @@ public class CatalogoBST {
         }
         System.out.println("\n--- CATÁLOGO GERAL DE LIVROS (Ordem Alfabética) ---");
         percorrerEImprimir(this.raiz);
-        System.out.println("---------------------------------------------------");
     }
 
     private void percorrerEImprimir(NoArvore atual) {

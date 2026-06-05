@@ -79,7 +79,6 @@ public class BibliotecaLista {
             System.out.println(atual.livro.toString());
             atual = atual.getProximo();
         }
-        System.out.println("------------------------------");
     }
 
     public void salvarNoArquivo(FileWriter writer) {

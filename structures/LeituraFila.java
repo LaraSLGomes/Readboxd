@@ -76,7 +76,6 @@ public class LeituraFila {
             atual = atual.getProximo();
         }
 
-        System.out.println("--------------------------------");
     }
 
     public boolean buscar(String titulo) {
