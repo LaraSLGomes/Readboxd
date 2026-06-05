@@ -1,5 +1,7 @@
 package structures;
 
+import java.io.FileWriter;
+import java.util.Scanner;
 import models.Livro;
 import models.NoLista;
 
@@ -17,6 +19,11 @@ public class LeituraFila {
     }
 
     public void enfileirar(Livro livro) {
+        enfileirarSemMensagem(livro);
+        System.out.println("\"" + livro.getTitulo() + "\" foi marcado para ler depois.");
+    }
+
+    private void enfileirarSemMensagem(Livro livro) {
         NoLista novoNo = new NoLista(livro);
 
         if (estaVazia()) {
@@ -26,8 +33,6 @@ public class LeituraFila {
             this.fim.setProximo(novoNo);
             this.fim = novoNo;
         }
-
-        System.out.println("\"" + livro.getTitulo() + "\" foi marcado para ler depois.");
     }
 
     public Livro desenfileirar() {
@@ -86,5 +91,47 @@ public class LeituraFila {
         }
 
         return false;
+    }
+
+    public void salvarNoArquivo(FileWriter writer) {
+        NoLista atual = this.inicio;
+
+        try {
+            while (atual != null) {
+                Livro livro = atual.livro;
+                writer.write(livro.getTitulo() + ";" +
+                             livro.getAutor() + ";" +
+                             livro.getAno() + ";" +
+                             livro.getGenero() + ";" +
+                             livro.getRating() + "\n");
+                atual = atual.getProximo();
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao salvar a fila de leitura no arquivo.");
+        }
+    }
+
+    public void carregarDoArquivo(Scanner leitor) {
+        while (leitor.hasNextLine()) {
+            String linha = leitor.nextLine();
+            String[] dados = linha.split(";");
+            if (dados.length >= 4) {
+                try {
+                    String titulo = dados[0];
+                    String autor = dados[1];
+                    int ano = Integer.parseInt(dados[2]);
+                    String genero = dados[3];
+                    Livro livroRecuperado = new Livro(titulo, autor, ano, genero);
+                    if (dados.length >= 5) {
+                        try {
+                            livroRecuperado.setRating(Double.parseDouble(dados[4]));
+                        } catch (NumberFormatException ignored) {
+                        }
+                    }
+                    enfileirarSemMensagem(livroRecuperado);
+                } catch (Exception ignored) {
+                }
+            }
+        }
     }
 }

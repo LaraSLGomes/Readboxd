@@ -11,6 +11,10 @@ import structures.LeituraFila;
 import structures.PilhaHistorico;
 
 public class ReadBoxdApp {
+    private static final String ARQUIVO_CATALOGO = "catalogo.csv";
+    private static final String ARQUIVO_BIBLIOTECA = "biblioteca.csv";
+    private static final String ARQUIVO_FILA = "fila_de_leitura.csv";
+
     private CatalogoBST catalogo;
     private BibliotecaLista biblioteca;
     private LeituraFila filaLeitura;
@@ -23,7 +27,6 @@ public class ReadBoxdApp {
         this.filaLeitura = new LeituraFila();
         this.historico = new PilhaHistorico();
         this.scanner = new Scanner(System.in);
-        
         carregarDados();
     }
 
@@ -49,7 +52,6 @@ public class ReadBoxdApp {
                 case "1":
                     historico.empilhar("Catálogo Geral");
                     catalogo.listarEmOrdem();
-                    historico.desempilhar();
                     break;
                 
                 case "2":
@@ -67,20 +69,23 @@ public class ReadBoxdApp {
                             biblioteca.adicionar(achado);
                         } else if (acao.equals("2")) {
                             filaLeitura.enfileirar(achado);
+                        } else if (acao.equals("3")) {
+                            System.out.println("Voltando ao menu principal...");
+                        } else {
+                            System.out.println("Ação inválida! Voltando ao menu principal...");
                         }
                     } else {
                         System.out.println("Livro não encontrado no catálogo.");
                     }
-                    historico.desempilhar();
                     break;
                 
                 case "3":
                     historico.empilhar("Minha Biblioteca");
                     biblioteca.listar();
-                    historico.desempilhar();
                     break;
                 
                 case "4":
+
                     historico.empilhar("Avaliar Livro");
                     System.out.print("Qual livro da sua biblioteca deseja avaliar? ");
                     String tituloAvaliar = scanner.nextLine();
@@ -91,10 +96,10 @@ public class ReadBoxdApp {
                     } catch (Exception e) {
                         System.out.println("Erro: Digite um valor decimal válido usando ponto (ex: 4.5).");
                     }
-                    historico.desempilhar();
                     break;
                 
                 case "5":
+
                     historico.empilhar("Fila de Leitura");
                     filaLeitura.listar();
                     System.out.print("\nDeseja iniciar a leitura do próximo livro da fila? (s/n): ");
@@ -104,16 +109,15 @@ public class ReadBoxdApp {
                             System.out.println("Você começou a ler: \"" + removido.getTitulo() + "\". Removido da fila.");
                         }
                     }
-                    historico.desempilhar();
                     break;
                 
                 case "6":
                     historico.empilhar("Histórico de Navegação");
                     historico.exibirHistorico();
-                    historico.desempilhar();
                     break;
                 
                 case "7":
+
                     historico.empilhar("Cadastrar Livro");
                     System.out.println("\n--- CADASTRAR NOVO LIVRO ---");
                     System.out.print("Título: "); String t = scanner.nextLine();
@@ -125,10 +129,10 @@ public class ReadBoxdApp {
                     
                     catalogo.inserir(new Livro(t, a, ano, g));
                     System.out.println("Livro \"" + t + "\" cadastrado com sucesso!");
-                    historico.desempilhar();
                     break;
 
                 case "0":
+
                     System.out.println("Salvando dados no banco de arquivos (banco_de_dados.csv)...");
                     salvarDados(); 
                     System.out.println("Encerrando o ReadBoxd... Até logo!");
@@ -143,34 +147,114 @@ public class ReadBoxdApp {
     }
 
     private void salvarDados() {
+        try (FileWriter writer = new FileWriter(ARQUIVO_CATALOGO)) {
+            catalogo.salvarNoArquivo(writer);
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar o catálogo no arquivo.");
+        }
+
         try (FileWriter writer = new FileWriter("banco_de_dados.csv")) {
             catalogo.salvarNoArquivo(writer);
         } catch (IOException e) {
-            System.out.println("Erro ao salvar os dados no arquivo.");
+            System.out.println("Erro ao salvar o catálogo no arquivo antigo.");
+        }
+
+        try (FileWriter writer = new FileWriter(ARQUIVO_BIBLIOTECA)) {
+            biblioteca.salvarNoArquivo(writer);
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar a biblioteca no arquivo.");
+        }
+
+        try (FileWriter writer = new FileWriter(ARQUIVO_FILA)) {
+            filaLeitura.salvarNoArquivo(writer);
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar a fila de leitura no arquivo.");
         }
     }
 
     private void carregarDados() {
-        File arquivo = new File("banco_de_dados.csv");
-        if (arquivo.exists()) {
-            try (Scanner leitorArquivo = new Scanner(arquivo)) {
-                while (leitorArquivo.hasNextLine()) {
-                    String linha = leitorArquivo.nextLine();
-                    String[] dados = linha.split(";");
-                    if (dados.length == 4) {
-                        Livro livroRecuperado = new Livro(dados[0], dados[1], Integer.parseInt(dados[2]), dados[3]);
-                        catalogo.inserir(livroRecuperado);
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println("Erro ao ler o arquivo de dados.");
-            }
-        } else {
+        File arquivoCatalogo = new File(ARQUIVO_CATALOGO);
+        File arquivoCatalogoAntigo = new File("banco_de_dados.csv");
 
-            catalogo.inserir(new Livro("Poemas Selecionados", "Emily Dickinson", 1890, "Poesia"));
-            catalogo.inserir(new Livro("Uma Vida Pequena", "Hanya Yanagihara", 2015, "Drama"));
-            catalogo.inserir(new Livro("A Hora da Estrela", "Clarice Lispector", 1977, "Romance"));
-            catalogo.inserir(new Livro("Capitães da Areia", "Jorge Amado", 1937, "Romance"));
+        if (arquivoCatalogo.exists()) {
+            carregarCatalogo(arquivoCatalogo);
+        } else if (arquivoCatalogoAntigo.exists()) {
+            carregarCatalogo(arquivoCatalogoAntigo);
+        } else {
+            carregarCatalogoPadrao();
+        }
+
+        File arquivoBiblioteca = new File(ARQUIVO_BIBLIOTECA);
+        if (arquivoBiblioteca.exists()) {
+            carregarBiblioteca(arquivoBiblioteca);
+        }
+
+        File arquivoFila = new File(ARQUIVO_FILA);
+        if (arquivoFila.exists()) {
+            carregarFila(arquivoFila);
+        }
+    }
+
+    private void carregarCatalogo(File arquivo) {
+        try (Scanner leitorArquivo = new Scanner(arquivo)) {
+            while (leitorArquivo.hasNextLine()) {
+                String linha = leitorArquivo.nextLine();
+                Livro livroRecuperado = criarLivroAPartirDeDados(linha.split(";"));
+                if (livroRecuperado != null) {
+                    catalogo.inserir(livroRecuperado);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao ler o arquivo do catálogo.");
+        }
+    }
+
+    private void carregarBiblioteca(File arquivo) {
+        try (Scanner leitorArquivo = new Scanner(arquivo)) {
+            biblioteca.carregarDoArquivo(leitorArquivo);
+        } catch (Exception e) {
+            System.out.println("Erro ao ler o arquivo da biblioteca.");
+        }
+    }
+
+    private void carregarFila(File arquivo) {
+        try (Scanner leitorArquivo = new Scanner(arquivo)) {
+            filaLeitura.carregarDoArquivo(leitorArquivo);
+        } catch (Exception e) {
+            System.out.println("Erro ao ler o arquivo da fila de leitura.");
+        }
+    }
+
+    private void carregarCatalogoPadrao() {
+        catalogo.inserir(new Livro("Poemas Selecionados", "Emily Dickinson", 1890, "Poesia"));
+        catalogo.inserir(new Livro("Uma Vida Pequena", "Hanya Yanagihara", 2015, "Drama"));
+        catalogo.inserir(new Livro("A Hora da Estrela", "Clarice Lispector", 1977, "Romance"));
+        catalogo.inserir(new Livro("Capitães da Areia", "Jorge Amado", 1937, "Romance"));
+    }
+
+    private Livro criarLivroAPartirDeDados(String[] dados) {
+        if (dados.length < 4) {
+            return null;
+        }
+
+        try {
+            String titulo = dados[0];
+            String autor = dados[1];
+            int ano = Integer.parseInt(dados[2]);
+            String genero = dados[3];
+            Livro livro = new Livro(titulo, autor, ano, genero);
+
+            if (dados.length >= 5) {
+                try {
+                    double nota = Double.parseDouble(dados[4]);
+                    livro.setRating(nota);
+                } catch (NumberFormatException ignored) {
+                }
+            }
+
+            return livro;
+        } catch (Exception e) {
+            return null;
         }
     }
 }

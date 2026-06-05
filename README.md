@@ -33,7 +33,7 @@ Para garantir a eficiência e demonstrar a aplicação dos conceitos estudados, 
 - [x] Implementação de pelo menos 3 estruturas de dados dinâmicas.
 - [x] Integração total entre as estruturas (Ex: buscar na árvore para inserir na lista).
 - [x] Operações de Inserção, Remoção, Busca e Impressão em todas as estruturas.
-- [x] **Requisito Bônus:** Persistência de dados. O sistema salva e carrega a biblioteca e a fila de leitura em arquivos (CSV) para não perder o progresso entre as sessões.
+- [x] **Requisito Bônus:** Persistência de dados. O sistema salva e carrega o catálogo, a biblioteca pessoal e a fila de leitura em arquivos CSV para não perder o progresso entre as sessões.
 
 ---
 
@@ -65,6 +65,6 @@ O código-fonte está estruturado no padrão de pacotes (packages) do Java para 
     git clone https://github.com/LaraSLGomes/Readboxd.git
 3. Navegue até a pasta raiz do projeto.
 4. Compile as classes:
-    javac src/app/Main.java
+    javac app/Main.java models/Livro.java models/NoArvore.java models/NoLista.java models/NoString.java structures/CatalogoBST.java structures/BibliotecaLista.java structures/LeituraFila.java structures/PilhaHistorico.java
 5. Execute o sistema:
-    java -cp src app.Main
+    java app.Main

@@ -1,5 +1,7 @@
 package structures;
 
+import java.io.FileWriter;
+import java.util.Scanner;
 import models.Livro;
 import models.NoLista;
 
@@ -11,6 +13,11 @@ public class BibliotecaLista {
     }
 
     public void adicionar(Livro livro) {
+        adicionarSemMensagem(livro);
+        System.out.println("\"" + livro.getTitulo() + "\" adicionado à sua biblioteca pessoal!");
+    }
+
+    private void adicionarSemMensagem(Livro livro) {
         NoLista novoNo = new NoLista(livro);
         if (cabeca == null) {
             cabeca = novoNo;
@@ -21,7 +28,6 @@ public class BibliotecaLista {
             }
             atual.setProximo(novoNo);
         }
-        System.out.println("\"" + livro.getTitulo() + "\" adicionado à sua biblioteca pessoal!");
     }
 
     public void remover(String titulo) {
@@ -74,5 +80,46 @@ public class BibliotecaLista {
             atual = atual.getProximo();
         }
         System.out.println("------------------------------");
+    }
+
+    public void salvarNoArquivo(FileWriter writer) {
+        NoLista atual = cabeca;
+        try {
+            while (atual != null) {
+                Livro livro = atual.livro;
+                writer.write(livro.getTitulo() + ";" +
+                             livro.getAutor() + ";" +
+                             livro.getAno() + ";" +
+                             livro.getGenero() + ";" +
+                             livro.getRating() + "\n");
+                atual = atual.getProximo();
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao salvar a biblioteca no arquivo.");
+        }
+    }
+
+    public void carregarDoArquivo(Scanner leitor) {
+        while (leitor.hasNextLine()) {
+            String linha = leitor.nextLine();
+            String[] dados = linha.split(";");
+            if (dados.length >= 4) {
+                try {
+                    String titulo = dados[0];
+                    String autor = dados[1];
+                    int ano = Integer.parseInt(dados[2]);
+                    String genero = dados[3];
+                    Livro livroRecuperado = new Livro(titulo, autor, ano, genero);
+                    if (dados.length >= 5) {
+                        try {
+                            livroRecuperado.setRating(Double.parseDouble(dados[4]));
+                        } catch (NumberFormatException ignored) {
+                        }
+                    }
+                    adicionarSemMensagem(livroRecuperado);
+                } catch (Exception ignored) {
+                }
+            }
+        }
     }
 }

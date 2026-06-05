@@ -80,9 +80,15 @@ public class CatalogoBST {
                 return atual.esquerda;
             }
 
-            return atual.direita;
+            NoArvore menorDireita = encontrarMenor(atual.direita);
+            atual.livro = menorDireita.livro;
+            atual.direita = removerRecursivo(atual.direita, menorDireita.livro.getTitulo());
         }
         return atual;
+    }
+
+    private NoArvore encontrarMenor(NoArvore node) {
+        return (node.esquerda == null) ? node : encontrarMenor(node.esquerda);
     }
 
     public void listarEmOrdem() {
@@ -111,12 +117,11 @@ public class CatalogoBST {
         if (atual != null) {
             try {
                 salvarRecursivo(atual.esquerda, writer);
-                
-                writer.write(atual.livro.getTitulo() + ";" + 
-                             atual.livro.getAutor() + ";" + 
-                             atual.livro.getAno() + ";" + 
-                             atual.livro.getGenero() + "\n");
-                
+                writer.write(atual.livro.getTitulo() + ";" +
+                             atual.livro.getAutor() + ";" +
+                             atual.livro.getAno() + ";" +
+                             atual.livro.getGenero() + ";" +
+                             atual.livro.getRating() + "\n");
                 salvarRecursivo(atual.direita, writer);
             } catch (Exception e) {
                 System.out.println("Erro ao gravar nó no arquivo.");
