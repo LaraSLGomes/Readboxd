@@ -1,2 +1,7 @@
 .vscode/settings.json
- 
+*.class
+*.csv
+banco_de_dados.csv
+catalogo.csv
+biblioteca.csv
+fila_de_leitura.csv
