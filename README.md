@@ -60,11 +60,20 @@ O código-fonte está estruturado no padrão de pacotes (packages) do Java para 
 
 ## Como Executar
 
-1. Certifique-se de ter o **Java JDK** instalado na sua máquina.
+1. Certifique-se de ter o **Java JDK 8 ou superior** instalado na sua máquina.
+   - **IMPORTANTE:** O compilador (`javac`) e a JVM (`java`) devem ser da **mesma versão**. Se você tem versões diferentes, pode gerar o erro `UnsupportedClassVersionError`.
+
 2. Clone o repositório:
-    git clone https://github.com/LaraSLGomes/Readboxd.git
-3. Navegue até a pasta raiz do projeto.
-4. Compile as classes:
-    javac app/Main.java models/Livro.java models/NoArvore.java models/NoLista.java models/NoString.java structures/CatalogoBST.java structures/BibliotecaLista.java structures/LeituraFila.java structures/PilhaHistorico.java
+   git clone https://github.com/LaraSLGomes/Readboxd.git
+
+3. Navegue até a pasta raiz do projeto:
+   cd Readboxd
+
+4. Compile todas as classes:
+   javac app/*.java models/*.java structures/*.java
+
 5. Execute o sistema:
-    java app.Main
+   java app.Main
+
+**Nota:** Se o seu compilador for mais recente, mas você precisar rodar em um ambiente Java 8, compile com compatibilidade usando a flag `--release 8`:
+javac --release 8 app/*.java models/*.java structures/*.java
