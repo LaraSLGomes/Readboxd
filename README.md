@@ -1,5 +1,8 @@
 # ReadBoxd
 
+Lara Stephanny 2410494
+Rafael Dantas - 2517979
+
 **ReadBoxd** é uma plataforma de gerenciamento de leitura inspirada no funcionamento do Letterboxd. Este projeto foi desenvolvido como Projeto Final (AV3) da disciplina de **Estrutura de Dados** do curso de Ciência da Computação da Universidade de Fortaleza (UNIFOR).
 
 O objetivo central do sistema é aplicar, de forma prática e integrada, diferentes estruturas de dados dinâmicas para gerenciar o catálogo de livros, a biblioteca pessoal do usuário, sua fila de leituras futuras e o histórico de navegação.
